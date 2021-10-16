@@ -1,96 +1,87 @@
+import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class CourseAppOne {
     public static void main(String[] args) {
 
-        /*
-            **** GET INPUTS ****
-            - User Name ***
-            - Password ***
-
-            **** USER NAME ****
-            - En Az 3 Karekter Olacak ***
-            - (?!*) Olmayacak ***
-
-            **** PASSWORD ****
-            - Büyük ve Küçük harf olacak ***
-            - Özel Karakter içerecek ***
-            - rakam içerecek ***
-            - En az 8 karakter olacak ***
-
-            -- OLUŞAN EKSİKLİKLER KULLANICIYA BELİRTİLECEK ***
-        */
-
         // VARIABLES
-        String username;
-        String password;
-        char[] usernameDebugging;
-        char[] passwordDebugging;
-
-        // CONTROL VARIABLES
-        boolean isPasswordTrue = true;
-        boolean isUsernameTrue = true;
+        int operations = 1;
+        String UserText;
+        String[] numberList;
+        String[] textExplode;
+        String math_process_name;
+        int math_process_index = 0;
 
         // CLASSES
         Scanner input = new Scanner(System.in);
 
-        // USER GET VALUES
-        System.out.print("Kullanıcı Adınız..: ");
-        username = input.nextLine();
+        // USER TEXT
+        System.out.print("İfadenizi Giriniz..: ");
+        UserText = input.nextLine();
 
-        System.out.print("Şifreniz..: ");
-        password = input.next();
+        // TEXT EXPLODE
+        textExplode = UserText.split(" ");
 
-        try {
-            if (username.length() < 3) {
-                System.err.println("Kullanıcı Adınız en az 3 karakter olmalıdır!!!");
-            } else {
-                usernameDebugging = new char[username.length()];
+        // TRANSACTION CAPTURE
+        for(String explode: textExplode){
+            if(explode.contains("topla")){
+                operations = 0;
+                math_process_index = UserText.indexOf("topla");
+            }else if(explode.contains("çıkar")){
+                operations = 0;
+                math_process_index = UserText.indexOf("çıkar");
+            }else if(explode.contains("fark")){
+                operations = 0;
+                math_process_index = UserText.indexOf("fark");
+            }else if(explode.contains("çarp")){
+                math_process_index = UserText.indexOf("çarp");
+            }else if(explode.contains("böl")){
+                math_process_index = UserText.indexOf("böl");
+            }
+        }
+        // MATH PROCESS NAME
+        math_process_name = UserText.substring(math_process_index).split(" ")[0];
 
-                for (int i = 0; i < usernameDebugging.length; i++) {
-                    if (!((username.charAt(i) > 64 && username.charAt(i) < 91) || (username.charAt(i) > 96 && username.charAt(i) < 123) || (username.charAt(i) > 47 && username.charAt(i) < 58) || username.charAt(i) == 32)) {
-                        isUsernameTrue = false;
+        // NUMBERS
+        numberList = new String[10];
+        numberList[0] = "0";
+        numberList[1] = "1";
+        numberList[2] = "2";
+        numberList[3] = "3";
+        numberList[4] = "4";
+        numberList[5] = "5";
+        numberList[6] = "6";
+        numberList[7] = "7";
+        numberList[8] = "8";
+        numberList[9] = "9";
+
+        // ALL CONTROLLER
+        for(int i=0;i<numberList.length; i++){
+            for(int j=0; j<textExplode.length; j++){
+                if(!textExplode[j].isBlank()){
+                    if(textExplode[j].matches(numberList[i])){
+                        int number = Integer.parseInt(numberList[i]);
+                        if(math_process_name.contains("topla")){
+                            operations+=number;
+                        }else if(math_process_name.contains("çıkar") || math_process_name.contains("fark")){
+                            operations = number - operations;
+                        }else if(math_process_name.contains("çarp")){
+                            operations*=number;
+                        }else if(math_process_name.contains("böl")){
+                            operations = number / operations;
+                        }else{
+                            System.err.println("Böyle bir işlem daha önce tanımlanmadı.. GEÇERSİZ İŞLEM!!!");
+                        }
                     }
                 }
-
-                if (!isUsernameTrue)
-                    System.err.println("Kullanıcı Adı Hatası: Özel Karakter içeremez");
-
             }
+        }
 
-            if (password.length() < 8) {
-                isPasswordTrue = false;
-                System.err.println("Şifreniz en az 8 karakter olmalıdır!!!");
-            } else {
-                passwordDebugging = new char[password.length()];
-
-                for (int i = 0; i < passwordDebugging.length; i++) {
-                    if (!((password.charAt(i) > 64 && password.charAt(i) < 91) || (password.charAt(i) > 96 && password.charAt(i) < 123) || (password.charAt(i) > 47 && password.charAt(i) < 58) || (password.charAt(i) > 32 && password.charAt(i) < 48))) {
-                        isPasswordTrue = false;
-                    }
-                }
-
-                if (!isPasswordTrue) {
-                    System.err.println("Şifre Hatası: ");
-                    System.err.println("- Büyük ve Küçük harf Olmalı!!");
-                    System.err.println("- Rakam İçermeli");
-                    System.err.println("- Özel karakter bulundurmalı");
-                }
-            }
-
-            if (isUsernameTrue && isPasswordTrue) {
-                System.out.println();
-                System.out.println("*********************");
-                System.out.println("*** GİRİŞ YAPILDI ***");
-                System.out.println("*********************");
-            }else{
-                System.err.println();
-                System.err.println("**************");
-                System.err.println("**** HATA ****");
-                System.err.println("**************");
-            }
-        }catch (StringIndexOutOfBoundsException $e){
-            System.out.println($e.getMessage());
+        if(operations >= 0){
+            System.out.println(operations);
+        }else{
+            System.err.println("İşlem Yapılamadı.. Lütfen Programı Tekrar Başlatınız!!!");
         }
 
 
